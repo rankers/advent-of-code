@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"os"
-	"regexp"
 	"strconv"
 	"strings"
 )
@@ -47,23 +46,13 @@ func checkValidity(rule string, password string) bool {
 	check(err1)
 	max, err2 := strconv.Atoi(maxString)
 	check(err2)
-	return (checkMinCondition(min, letter, password) && checkMaxCondition(max, letter, password))
+	return (checkLetterAtPosition(min, letter, password) != checkLetterAtPosition(max, letter, password))
 }
 
-func checkMinCondition(
-	min int,
+func checkLetterAtPosition(
+	position int,
 	letter string,
 	password string) bool {
-	letterRegex := regexp.MustCompile(letter)
-	matches := letterRegex.FindAllStringIndex(password, -1)
-	return len(matches) >= min
-}
-
-func checkMaxCondition(
-	max int,
-	letter string,
-	password string) bool {
-	letterRegex := regexp.MustCompile(letter)
-	matches := letterRegex.FindAllStringIndex(password, -1)
-	return len(matches) <= max
+	charAtPosition := password[position-1]
+	return string(charAtPosition) == letter
 }

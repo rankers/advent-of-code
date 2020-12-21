@@ -61,5 +61,6 @@ Lovely brew
 Installing 16 tools at /Users/rankers/go/bin in module mode.
   gocode`
 
-2. more tbc...
+1. Array destructuring. gGneral packing/unpacking as is done in Python is not supported. I think the way to go there is to define your own small ad-hoc function using multiple return values. 
+2. Enums
 
