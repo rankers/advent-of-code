@@ -1,4 +1,4 @@
-# Advent of Code 2020
+# Advent of Code
 
 Attempting solutions in a mix of languages to see how I like them.
 
