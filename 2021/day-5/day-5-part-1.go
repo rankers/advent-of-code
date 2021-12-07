@@ -16,7 +16,6 @@ func main() {
 			start: start,
 			end:   end,
 		}
-		// fmt.Printf("Data: %v, Start: %v, End: %v, All Coords: %v \n", lineSegmentData, segment.start, segment.end, segment.allCoords())
 		grid.drawLine(segment)
 	}
 	grid.print()
@@ -45,9 +44,6 @@ func (grid *Grid) overlappingLines() int {
 }
 
 func (grid *Grid) print() {
-	// for _, line := range grid.gridPositions {
-	// 	// fmt.Printf("%v\n", line)
-	// }
 	fmt.Printf("Count overlapping lines: %d \n", grid.overlappingLines())
 }
 
@@ -64,6 +60,10 @@ type Coordinate struct {
 func (lineSegment *LineSegment) allCoords() []Coordinate {
 	coordSlice := []Coordinate{}
 	fmt.Printf("Working on line seg %v \n", lineSegment)
+
+	if lineSegment.is45Diagonal() {
+		return lineSegment.diagonalCoords()
+	}
 	// Only allowed if horizontal or vertical
 	if lineSegment.start.x == lineSegment.end.x || lineSegment.start.y == lineSegment.end.y {
 
@@ -99,6 +99,48 @@ func (lineSegment *LineSegment) allCoords() []Coordinate {
 		coordSlice = append(coordSlice, lineSegment.end)
 	}
 	return coordSlice
+}
+
+func (lineSegment *LineSegment) diagonalCoords() []Coordinate {
+	coordSlice := []Coordinate{}
+	switch {
+	case lineSegment.start.x < lineSegment.end.x && lineSegment.start.y < lineSegment.end.y:
+		fmt.Println("Dropping right")
+		for i := 0; i <= lineSegment.end.x-lineSegment.start.x; i++ {
+			coordSlice = append(coordSlice, Coordinate{lineSegment.start.x + i, lineSegment.start.y + i})
+		}
+	case lineSegment.start.x > lineSegment.end.x && lineSegment.start.y < lineSegment.end.y:
+		fmt.Println("Dropping left")
+		for i := 0; i <= lineSegment.start.x-lineSegment.end.x; i++ {
+			coordSlice = append(coordSlice, Coordinate{lineSegment.start.x - i, lineSegment.start.y + i})
+		}
+	case lineSegment.start.x < lineSegment.end.x && lineSegment.start.y > lineSegment.end.y:
+		fmt.Println("Rising right")
+		for i := 0; i <= lineSegment.end.x-lineSegment.start.x; i++ {
+			coordSlice = append(coordSlice, Coordinate{lineSegment.start.x + i, lineSegment.start.y - i})
+		}
+	case lineSegment.start.x > lineSegment.end.x && lineSegment.start.y > lineSegment.end.y:
+		fmt.Println("Rising left")
+		for i := 0; i <= lineSegment.start.x-lineSegment.end.x; i++ {
+			coordSlice = append(coordSlice, Coordinate{lineSegment.start.x - i, lineSegment.start.y - i})
+		}
+	default:
+		fmt.Println("Miss")
+	}
+	return coordSlice
+}
+
+func (lineSegment *LineSegment) is45Diagonal() bool {
+	// minus x and minus y off each other if they're equal we're good
+	xdiff := lineSegment.start.x - lineSegment.end.x
+	if xdiff < 0 {
+		xdiff = -xdiff
+	}
+	ydiff := lineSegment.start.y - lineSegment.end.y
+	if ydiff < 0 {
+		ydiff = -ydiff
+	}
+	return xdiff == ydiff
 }
 
 func parseLineSegmentData(lineSegmentData string) (Coordinate, Coordinate) {

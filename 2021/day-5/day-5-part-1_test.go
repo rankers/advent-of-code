@@ -38,6 +38,75 @@ func TestVerticalLineSegment(t *testing.T) {
 		}
 	}
 }
+func TestIs45Degrees(t *testing.T) {
+	lineSegment := LineSegment{
+		start: Coordinate{1, 1},
+		end:   Coordinate{3, 3},
+	}
+	if !lineSegment.is45Diagonal() {
+		t.Errorf("Expecting %v to be diagonal", lineSegment)
+	}
+
+	lineSegment2 := LineSegment{
+		start: Coordinate{3, 3},
+		end:   Coordinate{1, 1},
+	}
+	if !lineSegment2.is45Diagonal() {
+		t.Errorf("Expecting %v to be diagonal", lineSegment2)
+	}
+
+	lineSegment3 := LineSegment{
+		start: Coordinate{9, 7},
+		end:   Coordinate{7, 9},
+	}
+	if !lineSegment3.is45Diagonal() {
+		t.Errorf("Expecting %v to be diagonal", lineSegment3)
+	}
+
+	// lineSegment4 := LineSegment{
+	// 	start: Coordinate{1, 1},
+	// 	end:   Coordinate{, },
+	// }
+	// if !lineSegment3.is45Diagonal() {
+	// 	t.Errorf("Expecting %v to be diagonal", lineSegment3)
+	// }
+}
+
+func TestDiagonalLineFallingRightSegment(t *testing.T) {
+	lineSegment := LineSegment{
+		start: Coordinate{1, 1},
+		end:   Coordinate{3, 3},
+	}
+	result := lineSegment.allCoords()
+	expected := []Coordinate{Coordinate{1, 1}, Coordinate{2, 2}, Coordinate{3, 3}}
+
+	if len(result) != len(expected) {
+		t.Errorf("Arr length differ, expected: %v, result: %v", expected, result)
+	}
+	for i, v := range result {
+		if v != expected[i] {
+			t.Errorf("%v, want: %v.", result[i], v)
+		}
+	}
+}
+func TestDiagonalLineFallingLeftSegment(t *testing.T) {
+	lineSegment := LineSegment{
+		start: Coordinate{2, 0},
+		end:   Coordinate{0, 2},
+	}
+	result := lineSegment.allCoords()
+	expected := []Coordinate{Coordinate{1, 1}, Coordinate{2, 2}, Coordinate{3, 3}}
+
+	if len(result) != len(expected) {
+		t.Errorf("Arr length differ, expected: %v, result: %v", expected, result)
+	}
+	for i, v := range result {
+		print(v.x == expected[i].x)
+		if v.x != expected[i].x {
+			t.Errorf("%v, want: %v.", result[i].x, v.x)
+		}
+	}
+}
 
 func TestHorizontalLineSegment(t *testing.T) {
 	lineSegment := LineSegment{
